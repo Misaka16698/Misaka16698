@@ -2,18 +2,27 @@ html{
      overflow: hidden;
 }
 @font-face {
-     font-family: "Matisse";
-     src: url("../font/FOT-MatissePro-EB.otf");
+     font-family: "MatisseA";
+     src: url("../font/FOTMatissePro-EB.woff2") ;
+}
+@font-face{
+     font-family: "MatisseB";
+     src: url("../font/FOTMatissePro-EB.otf") ;
 }
 body{
      margin: 0;
 }
+
 #index{
      width: 100%;
      background: black;
-     font-family: "Matisse";
+     font-family: "MatisseA","MatisseB";
      color: white;
 
+}
+.tmd{
+     /*我宣布，字体是这个世界上最逆天的东西，恶心死我了*/
+     font-family:"MatisseB";
 }
 p{
      margin: 0;
