@@ -1,0 +1,32 @@
+html{
+     overflow: hidden;
+}
+@font-face {
+     font-family: "Matisse";
+     src: url("../font/FOT-MatissePro-EB.otf");
+}
+body{
+     margin: 0;
+}
+#index{
+     width: 100%;
+     background: black;
+     font-family: "Matisse";
+     color: white;
+
+}
+p{
+     margin: 0;
+}
+.eva{
+     position: absolute;
+     z-index: 30;
+}
+.bg{
+     position: absolute;
+     background: black;
+     z-index: 1;
+}
+#enter{
+     color: #da0000;
+}
