@@ -15,10 +15,10 @@ body{
 
 #index{
      width: 100%;
-     background: black;
      font-family: "MatisseA","MatisseB";
      color: white;
-
+     z-index: 20;
+     background-image: linear-gradient(to bottom right, #f1b6b6 40%, #00f7ff );
 }
 .tmd{
      /*我宣布，字体是这个世界上最逆天的东西，恶心死我了*/
@@ -34,8 +34,27 @@ p{
 .bg{
      position: absolute;
      background: black;
-     z-index: 1;
+     z-index: 2;
 }
 #enter{
      color: #da0000;
 }
+.part{
+     position: absolute;
+     text-align: center;
+}
+#misaka{
+     display: none;
+     position: absolute;
+}
+#line{
+     display: block;
+}
+
+.title{
+     position: absolute;
+     font-family: serif;
+     font-size: 45px;
+     text-shadow: 0px 0px 15px #fff5ce,0px 0px 15px #fff5ce,0px 0px 15px #fff5ce;
+}
+
