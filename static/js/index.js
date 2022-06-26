@@ -47,7 +47,7 @@ function set_size() {
     else{
         draw_line(win_width,win_height)
         $("#misaka").css({"display":"inline","top":win_height/2-655/2,"left":win_width/2-664/2,"transform":"scale(0.2,0.2)"})
-        $(".title").css("top",win_height/4)
+        $(".title").css({"top":win_height/4-22.5,"left":(win_width/2-7*45)/2})
     }
 }
 
@@ -106,8 +106,9 @@ function move(){
     },"slow",0,function (){$("#first_page").empty();index_or_not=false})
     bg2.css("z-index",300)
     draw_line(win_width,win_height)
-    $("#misaka").css({"display":"inline","top":win_height/2-664/2,"left":win_width/2-655/2,"transform":"scale(0.2,0.2)"})
+    $("#misaka").css({"display":"inline","top":win_height/2-655/2,"left":win_width/2-664/2,"transform":"scale(0.2,0.2)"})
     $(".title").css({"top":win_height/4-22.5,"left":(win_width/2-7*45)/2})
+
 }
 //用canvas绘制分界线
 function draw_line(win_width,win_height){
@@ -125,13 +126,56 @@ function draw_line(win_width,win_height){
     cxt.strokeStyle=grd
     cxt.fill()
 }
+//动画式alert
+
+function MyAlert(string){
+    let time = new Date().getTime()
+    $("#second_page").append("<div id='"+time.toString()+"' style='position: absolute;top:10px;" +
+        "background: #ff0000;left:"+(win.width()/2-string.length/2*20).toString()+"px;" +
+        "font-family: Serif;font-size: 20px;padding: 5px;border-radius: 5px'><p>!"+string+"</p></div>")
+
+    $("#"+time.toString()).animate({top:"-=47px",opacity:"30%"},700,function (){$("#"+time.toString()).remove()})
+}
+//用于鼠标位于其上时发射标题的动画
+const title_list={"ul":["开发日记","数学笔记","杂谈随感",],"ur":["组合趣题","敬请期待","敬请期待"],"br":["随机抽老婆","酷炫敲论文","敬请期待"],"bl":["免费pr","网页模板","敬请期待"]}
+function send_title(element){
+    let position = element.parent().attr("id")
+    let titles = title_list[position]
+    $("#"+position).append("<div id='sub_title'></div>")
+    $("#sub_title").append("<p id='first_float_title' class='floating_title' style='position: absolute;font-size: 30px;font-family:Serif;text-shadow: 0px 0px 15px #fff5ce,0px 0px 15px #fff5ce,0px 0px 15px #fff5ce;" +
+        "top:"+(win.height()/4).toString()+"px;left:"+((win.width()/2-7*45)/2).toString()+"px'>"+titles[0]+"</p>")
+    $("#sub_title").append("<p id='second_float_title' class='floating_title' style='position: absolute;font-size: 30px;font-family:Serif;text-shadow: 0px 0px 15px #fff5ce,0px 0px 15px #fff5ce,0px 0px 15px #fff5ce;" +
+        "top:"+(win.height()/4).toString()+"px;left:"+((win.width()/2-7*45)/2).toString()+"px'>"+titles[1]+"</p>")
+    $("#sub_title").append("<p id='third_float_title' class='floating_title' style='position: absolute;font-size: 30px;font-family:Serif;text-shadow: 0px 0px 15px #fff5ce,0px 0px 15px #fff5ce,0px 0px 15px #fff5ce;" +
+        "top:"+(win.height()/4).toString()+"px;left:"+((win.width()/2-7*45)/2).toString()+"px'>"+titles[2]+"</p>")
+    $("#first_float_title").animate({top:"-=100",left:"-=50"})
+    $("#second_float_title").animate({top:"-=150",left:"+=270"})
+    $("#third_float_title").animate({top:"+=130",left:"+=180"})
+}
+//用于鼠标离开时收回标题
+function back_title(){
+    $("#sub_title").remove()
+}
 $(function () {
     set_size()
     $("#enter").click(function (){
         move()
     })
+    $(".enlarge1").hover(function (){
+        $(this).css("transform","scale(1.1,1.1)")
+        send_title($(this))
+    },
+    function (){
+        $(this).css("transform","scale(1,1)")
+        back_title()
+    console.log("finished")})
+    $(".enlarge2").hover(function (){
+            $(this).css("transform","scale(0.25,0.25)")
+        },
+        function (){$(this).css("transform","scale(0.2,0.2)")})
+    $("#misaka").click(function (){MyAlert("禁止调戏御坂妹")})
     win.resize(function () {
         set_size()
     })
-})
+});
 

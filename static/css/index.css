@@ -34,7 +34,7 @@ p{
 .bg{
      position: absolute;
      background: black;
-     z-index: 2;
+     z-index: 10;
 }
 #enter{
      color: #da0000;
@@ -56,5 +56,6 @@ p{
      font-family: serif;
      font-size: 45px;
      text-shadow: 0px 0px 15px #fff5ce,0px 0px 15px #fff5ce,0px 0px 15px #fff5ce;
+     z-index:5
 }
 
