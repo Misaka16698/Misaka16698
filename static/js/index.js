@@ -174,6 +174,7 @@ $(function () {
         },
         function (){$(this).css("transform","scale(0.2,0.2)")})
     $("#misaka").click(function (){MyAlert("禁止调戏御坂妹")})
+    $("#blog").click(function (){window.location.href="blog/index.html"})
     win.resize(function () {
         set_size()
     })
