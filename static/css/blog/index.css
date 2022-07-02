@@ -25,6 +25,7 @@
 }
 .info{
     flex:70%;
+    overflow: hidden;
 }
 #body_left{
     flex: 25%;
