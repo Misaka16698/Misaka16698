@@ -26,6 +26,7 @@
 .info{
     flex:70%;
     overflow: hidden;
+    padding-top:0px !important;
 }
 #body_left{
     flex: 25%;
@@ -45,9 +46,10 @@ li{
 p{
     font-size: 15px;
     color: grey;
-    margin: 4px;
+    margin: 0 4px 4px 4px;
 }
 .title1{
     font-size: 25px;
     color: #646464;
+    margin-bottom: 8px;
 }

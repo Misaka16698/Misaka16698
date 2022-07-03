@@ -1,9 +1,21 @@
 #body{
     width: 80%;
     margin: 20px auto ;
-    background-color: rgba(244, 239, 255, 0.95);
+    background-color: rgba(244, 239, 255, 0.9);
     border-radius: 10px;
     padding: 20px 40px;
+}
+#tag_list{
+    font-size: 15px;
+    color: #3c2648;
+    text-align: center;
+}
+.tag{
+    background-color: #9b00ff;!important;
+    color: white;!important;
+    padding: 3px;
+    margin:5px;
+    border-radius: 2px;
 }
 h1{
     font-size: 65px;

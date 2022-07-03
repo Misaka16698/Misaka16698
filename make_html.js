@@ -7,17 +7,28 @@ const cheerio = require("cheerio")
 function md2html(file_name,to_path, origin_name){
     let pro =new Promise(function (resolve, reject){
         fs.readFile(file_name,'utf8', (err,data_2) =>{
+            let file_info = data_2.split("</file_info>")[0].substring(11)
+            file_info = JSON.parse(file_info)
+            let tag = file_info["tag"]
+            let category = file_info["category"]
+            let time = new Date()
+            let text_time=time.getFullYear().toString()+"/"+time.getMonth().toString()+"/"+time.getDate().toString()
+            data_2 = data_2.split("</file_info>")[1]
             let turned_js=marked(data_2)
             let title = turned_js.split("h1")[1].split(">")[1].split("<")[0]
             let new_html = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
+                "<meta name='keywords' content='"+tag.join(",")+"'>\n"+
+                "<meta name='category' content='"+category+"'>\n" +
+                "<meta name='create_time' content='"+text_time+"'>"+
                 "    <title>"+title+"</title>\n" +
                 "    <script src=\"https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js\"></script>\n" +
                 "    <script src=\"../../static/js/blog/passage.js\"></script>\n" +
                 "    <link rel=\"stylesheet\" href=\"../../static/css/blog/blog.css\">\n" +
                 "    <link rel=\"stylesheet\" href=\"../../static/css/blog/module.css\">\n" +
+                "    <link rel=\"stylesheet\" href=\"../../static/css/icon-font.css\">\n" +
                 "<link rel=\"stylesheet\" \n" +
                 "          href=\"//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css\">\n" +
                 "    <script src=\"//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js\"></script>\n"+
@@ -36,7 +47,7 @@ function md2html(file_name,to_path, origin_name){
                 "</div>\n" +
                 "\n" +
                 "<div id=\"body\">\n" +
-                "\n" + marked(data_2)+
+                "\n" + turned_js+
                 "</div>\n" +
                 "<div id=\"foot\">\n" +
                 "    <p>Copyright 2022/6/29 by 小崔</p>\n" +
@@ -51,7 +62,7 @@ function md2html(file_name,to_path, origin_name){
                 }
                 else{
                     console.log("已写入"+to_path)
-                    description = upload_description(origin_name,description,new_html)
+                    description = upload_description(origin_name,description,new_html,tag,category,text_time)
                     resolve()
                 }
             })
@@ -59,14 +70,18 @@ function md2html(file_name,to_path, origin_name){
     })
     return pro
 }
+//用于在转换成功后，把make_html.json中文件对应的值变为1, 在传入no_change时，只更新文件
 function change_passage_code(data, passage_name){
-    data["passage_status"][passage_name] = 1
+    if(passage_name!="no_change"){
+        data["passage_status"][passage_name] = 1
+    }
     fs.writeFile("make_html.json", JSON.stringify(data), {flag:"w+"},(err) =>{
         if(err){
             console.error(err)
         }
     })
 }
+// 用于把description写入对应文件
 function write_description(description){
     let prom = new Promise(function (resolve, reject){
         fs.writeFile("description.json",JSON.stringify(description),{flag: "w+"}, (err)=>{
@@ -76,34 +91,55 @@ function write_description(description){
     })
     return prom
 }
-function upload_description(file_name,description,html){
+// 用于在读取一个文件后更新description
+function upload_description(file_name,description,html,tag,category,time){
     let $ = cheerio.load(html)
-    description[file_name.substring(0,file_name.length-3)+".html"] = $("#body").text().replace(/[\r\n]/g,"");
+    description[file_name.substring(0,file_name.length-3)+".html"]["text"] = $("#body").text().replace(/[\r\n]/g,"");
+    description[file_name.substring(0,file_name.length-3)+".html"]["tag"] = tag
+    description[file_name.substring(0,file_name.length-3)+".html"]["category"] = category
+    description[file_name.substring(0,file_name.length-3)+".html"]["update_time"].push(time)
     return description
 }
+// 用于制作主页
 function make_index(index_list, description){
     let passage_info =""
+
     for(let i in index_list){
+        let tag_list=description[index_list[i]]["tag"]
+        let category = description[index_list[i]]["category"]
+        let create_time = description[index_list[i]]["update_time"][0]
+        let tag_text =""
+        for(let i in tag_list){
+            tag_text+= "<span class='icon-price-tag tag'>"+ tag_list[i]+"</span>"
+        }
+        let detail = "<div class='tag_list'>" +tag_text+
+            "<span class='icon-book' style='margin: 5px'>"+category+"</span>"+"<br>" +
+            "<span class='icon-history'>写于</span>"+create_time+
+            "</div>"
         passage_info +=
         "            <div class=\"passage_info\" onclick='window.location.href=\"public/"+index_list[i]+"\"'>\n" +
         "                <div class=\"pic\">\n" +
         "                    <img src=\"../static/img/blog/"+index_list[i].split(".")[0] +".png\">\n" +
         "                </div>\n" +
         "                <div class=\"info\">\n" +
-        "                    <p class=\"title1\">"+index_list[i].split(".")[0]+"</p>\n" +
-        "                    <p>"+description[index_list[i]].substring(0,100)+"</p>\n" +
+        "                    <p class=\"title1\">"+index_list[i].split(".")[0]+"</p>\n" +detail+
+
+        "                    <p>"+description[index_list[i]]["text"].substring(0,200)+"</p>\n" +
         "                </div>\n" +
         "            </div>\n"
     }
+    let time = new Date()
+    let text_time=time.getFullYear().toString()+"/"+time.getMonth().toString()+"/"+time.getDate().toString()
     let text = "<!DOCTYPE html>\n" +
         "<html lang=\"en\">\n" +
         "<head>\n" +
         "    <meta charset=\"UTF-8\">\n" +
         "    <title>小崔的博客主页</title>\n" +
         "    <script src=\"https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js\"></script>\n" +
-        "    <script src=\"../static/js/blog/passage.js\"></script>\n" +
+        "    <script src=\"../static/js/blog/index.js\"></script>\n" +
         "    <link rel=\"stylesheet\" href=\"../static/css/blog/index.css\">\n" +
         "    <link rel=\"stylesheet\" href=\"../static/css/blog/blog.css\">\n" +
+        "    <link rel=\"stylesheet\" href=\"../static/css/icon-font.css\">\n" +
         "</head>\n" +
         "<body>\n" +
         "    <div id=\"head\">\n" +
@@ -148,7 +184,7 @@ function make_index(index_list, description){
         "                <li>总字数: 0</li>\n" +
         "                <li>访客数: 0</li>\n" +
         "                <li>浏览次数: 0</li>\n" +
-        "                <li>上次更新时间: undefined</li>\n" +
+        "                <li>上次更新时间:"+text_time+"</li>\n" +
         "                </ul>\n" +
         "            </div>\n" +
         "\n" +
@@ -171,13 +207,25 @@ let data =  fs.readdirSync("blog/resource")
 let new_blog_data = JSON.parse(blog_data)
 let index_list = new_blog_data["index_passage"]
 let pro_list = []
+// 删除description和make_html中有而源文件目录下没有的内容
+for(let i in new_blog_data["passage_status"]){
+    if(data.indexOf(i) === -1){
+        delete new_blog_data["passage_status"][i]
+    }
+}
+for(let i in description){
+    if(data.indexOf(i.substring(0,i.length-5)+".md") === -1){
+        delete description[i]
+    }
+}
+change_passage_code(new_blog_data, "no_change")
 for(let i in data){
-    if (new_blog_data["passage_status"][data[i]] == undefined){
+    if (new_blog_data["passage_status"][data[i]] === undefined){
         let pro = md2html("blog/resource/"+data[i],"blog/public/"+data[i].substring(0,data[i].length-3)+".html",data[i])
         pro_list.push(pro)
         change_passage_code(new_blog_data,data[i])
     }
-    else if(new_blog_data["passage_status"][data[i]] == 0){
+    else if(new_blog_data["passage_status"][data[i]] === 0){
         let pro = md2html("blog/resource/"+data[i],"blog/public/"+data[i].substring(0,data[i].length-3)+".html",data[i])
         change_passage_code(new_blog_data,data[i])
         pro_list.push(pro)
