@@ -9,6 +9,9 @@
     display: flex;
     margin: 0 auto;
 }
+span{
+    z-index: 10000;
+}
 .passage_info{
     height: 180px;
     display: flex;
