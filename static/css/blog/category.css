@@ -5,21 +5,19 @@
 .category{
     display: inline-block;
     width: 31%;
-    height: 300px;
+    height: 280px;
     margin: 0.25%;
 
 }
 .category img{
-    width: 100%;
-    height: 100%;
-    filter: grayscale(50%);
     border-radius: 5px;
 }
 .category p{
     position: relative;
-    top:-190px;
+    top:-175px;
     text-align: center;
-    font-size: 40px;
+    font-size: 50px;
     color: white;
-    text-shadow: 0px 0px 5px #772be8;
+    text-shadow: 0px 0px 15px #772be8,0px 0px 15px #772be8,0px 0px 15px #772be8;
+    word-spacing: 3px;
 }

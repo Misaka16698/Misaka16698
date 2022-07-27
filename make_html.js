@@ -75,11 +75,16 @@ function change_passage_code(data, passage_name){
     if(passage_name!="no_change"){
         data["passage_status"][passage_name] = 1
     }
-    fs.writeFile("make_html.json", JSON.stringify(data), {flag:"w+"},(err) =>{
-        if(err){
-            console.error(err)
-        }
-    })
+
+    let write_data ={"index_passage":[],"passage_status":{}}
+    for(let a in data["index_passage"]){
+        write_data["index_passage"].push(data["index_passage"][a].split(".")[0])
+    }
+    for(let b in data["passage_status"]){
+       write_data["passage_status"][b.split(".")[0]] = data["passage_status"][b]
+    }
+
+    fs.writeFileSync("make_html.json", JSON.stringify(write_data), {flag:"w+"})
 }
 // 用于把description写入对应文件
 function write_description(description){
@@ -94,16 +99,28 @@ function write_description(description){
 // 用于在读取一个文件后更新description
 function upload_description(file_name,description,html,tag,category,time){
     let $ = cheerio.load(html)
-    description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["text"] = $("#body").text().replace(/[\r\n]/g,"");
-    description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["tag"] = tag
-    description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["category"] = category
-    description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["update_time"].push(time)
+    if(description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]){
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["text"] = $("#body").text().replace(/[\r\n]/g,"")
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["tag"] = tag
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["category"] = category
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["title_img"] = $("#body").children(":first").children(":first").attr("src")
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["update_time"].push(time)
+    }
+    else{
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"] = {"update_time":[]}
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["text"] = $("#body").text().replace(/[\r\n]/g,"")
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["tag"] = tag
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["category"] = category
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["title_img"] = $("#body").children(":first").children(":first").attr("src")
+        description["passage_data"][file_name.substring(0,file_name.length-3)+".html"]["update_time"].push(time)
+    }
     return description
 }
 function make_passage_info(i,position){
     let tag_list=description["passage_data"][i]["tag"]
     let category = description["passage_data"][i]["category"]
     let create_time = description["passage_data"][i]["update_time"][0]
+    let img_src = description["passage_data"][i]["title_img"].substring(3)
     let tag_text =""
     for(let i in tag_list){
         tag_text+= "<span class='icon-price-tag tag'>"+ tag_list[i]+"</span>"
@@ -116,7 +133,7 @@ function make_passage_info(i,position){
 
         return "            <div class=\"passage_info\" onclick='window.location.href=\"public/"+i+"\"'>\n" +
         "                <div class=\"pic\">\n" +
-        "                    <img src=\"../static/img/blog/"+i.split(".")[0] +".png\">\n" +
+        "                    <img src=\""+img_src+"\">\n" +
         "                </div>\n" +
         "                <div class=\"info\">\n" +
         "                    <p class=\"title1\">"+i.split(".")[0]+"</p>\n" +detail+
@@ -226,7 +243,7 @@ function create_category_page(){
         category_html +=
         "    <div class=\"category\" onclick=\"window.location.href='category/"+a+".html'\">\n" +
         "        <img src=\"../static/img/blog/category/"+description["category"][a]["img_src"]+".png\">\n" +
-        "        <p>"+a+"</p>\n" +
+        "        <p>"+a.split("").join(" ")+"</p>\n" +
         "    </div>\n"
     }
     let html = "<!DOCTYPE html>\n" +
@@ -300,7 +317,7 @@ function create_each_category(category){
         "        <div>\n" +
 
         "            <img src=\"../../static/img/blog/category/"+img_src+".png\" style=\"width: 100%\">\n" +
-        "            <p class=\"title1\">关于话题：数学笔记</p>\n" +
+        "            <p class=\"title1\">分类:"+category+"</p>\n" +
         "            <p>作者: 小崔(御坂16899)<br>内容: "+description_word+"</p>\n" +
         "        </div>\n" +
         "        <div>\n" +
@@ -336,7 +353,14 @@ let des_data = fs.readFileSync("description.json")
 let description = JSON.parse(des_data)
 let blog_data = fs.readFileSync("make_html.json")
 let data =  fs.readdirSync("blog/resource")
-let new_blog_data = JSON.parse(blog_data)
+blog_data = JSON.parse(blog_data)
+let new_blog_data ={"index_passage":[],"passage_status":{}}
+for(let a in blog_data["index_passage"]){
+    new_blog_data["index_passage"].push(blog_data["index_passage"][a]+".html")
+}
+for(let b in blog_data["passage_status"]){
+    new_blog_data["passage_status"][b+".md"] = blog_data["passage_status"][b]
+}
 let index_list = new_blog_data["index_passage"]
 let pro_list = []
 // 删除description和make_html中有而源文件目录下没有的内容
@@ -383,7 +407,6 @@ Promise.all(pro_list).then(()=>{
             description["category"][n]["include_passage"] = category_dict[n]
         }
         }
-
     let prom = write_description(description)
     make_index(index_list,description)
     create_category_page()

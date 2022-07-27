@@ -12,16 +12,16 @@ html{
 }
 .tag_list{
     background-color: rgba(0,0,0,0) !important;
-    margin: 3px !important;
+    margin: 3px 3px 0px 3px!important;
     padding: 0px !important;
     color: grey;
-    font-size: 15px;
+    font-size: 14px;
 }
 .tag{
     background-color: #9b00ff !important;
     color: white !important;
-    padding: 3px;
-    margin:5px;
+    margin: 3px;
+    padding: 2px;
     border-radius: 2px;
 }
 h1{

@@ -117,12 +117,11 @@ function draw_line(win_width,win_height){
     c.height(win_height)
     let cxt=c[0].getContext("2d");
     let grd=cxt.createLinearGradient(0,0,150,300);
-    grd.addColorStop(0,"#0edaea");
-    grd.addColorStop(0.5,"#e8b2b2");
+    grd.addColorStop(0,"#00eeff");
+    grd.addColorStop(0.5,"#ffc5c5");
     cxt.fillStyle=grd;
     cxt.fillRect(0,75,300,1);
     cxt.fillRect(150,0,1,150);
-    cxt.arc(150,75, 15, 0, Math.PI*2)
     cxt.strokeStyle=grd
     cxt.fill()
 }
