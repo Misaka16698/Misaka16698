@@ -24,7 +24,7 @@ function md2html(file_name,to_path, origin_name){
                 "<meta name='category' content='"+category+"'>\n" +
                 "<meta name='create_time' content='"+text_time+"'>"+
                 "    <title>"+title+"</title>\n" +
-                "    <script src=\"https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js\"></script>\n" +
+                "    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>\n" +
                 "    <script src=\"../../static/js/blog/passage.js\"></script>\n" +
                 "    <link rel=\"stylesheet\" href=\"../../static/css/blog/blog.css\">\n" +
                 "    <link rel=\"stylesheet\" href=\"../../static/css/blog/module.css\">\n" +
@@ -172,7 +172,7 @@ function make_index(index_list){
         "<head>\n" +
         "    <meta charset=\"UTF-8\">\n" +
         "    <title>小崔的博客主页</title>\n" +
-        "    <script src=\"https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js\"></script>\n" +
+        "    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>\n" +
         "    <script src=\"../static/js/blog/index.js\"></script>\n" +
         "    <link rel=\"stylesheet\" href=\"../static/css/blog/index.css\">\n" +
         "    <link rel=\"stylesheet\" href=\"../static/css/blog/blog.css\">\n" +
@@ -251,7 +251,7 @@ function create_category_page(){
         "<head>\n" +
         "    <meta charset=\"UTF-8\">\n" +
         "    <title>小崔的博客主页</title>\n" +
-        "    <script src=\"https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js\"></script>\n" +
+        "    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>\n" +
         "    <script src=\"../static/js/blog/category.js\"></script>\n" +
         "    <link rel=\"stylesheet\" href=\"../static/css/blog/category.css\">\n" +
         "    <link rel=\"stylesheet\" href=\"../static/css/blog/blog.css\">\n" +
@@ -294,7 +294,7 @@ function create_each_category(category){
         "<head>\n" +
         "    <meta charset=\"UTF-8\">\n" +
         "    <title>"+category+"</title>\n" +
-        "    <script src=\"https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js\"></script>\n" +
+        "    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>\n" +
         "    <script src=\"../../static/js/blog/index.js\"></script>\n" +
         "    <link rel=\"stylesheet\" href=\"../../static/css/blog/index.css\">\n" +
         "    <link rel=\"stylesheet\" href=\"../../static/css/blog/blog.css\">\n" +
